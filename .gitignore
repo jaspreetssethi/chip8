@@ -1,3 +1,9 @@
 target/
 project/
 *~
+/bin/
+.project
+.cache-main
+.cache-tests
+.classpath
+.settings/
