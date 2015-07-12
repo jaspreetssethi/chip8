@@ -8,6 +8,6 @@ case class Cpu(
     val registers: RegisterFile,
     val l: Register,
     val stack: List[Address],
-    val memory) {
+    val memory: Any) {
 
 }
