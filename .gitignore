@@ -7,3 +7,5 @@ project/
 .cache-tests
 .classpath
 .settings/
+.idea/
+*.iml
