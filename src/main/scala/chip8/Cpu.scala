@@ -6,7 +6,7 @@ package chip8
 case class Cpu(
     val pc: Address,
     val registers: RegisterFile,
-    val l: Register,
+    val i: Register,
     val stack: List[Address],
     val memory: Vector[Byte]) {
 

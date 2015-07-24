@@ -61,11 +61,11 @@ object OpcodeDecoder {
         case 0x7 => op8XY7
         case 0xE => op8XYE
       }
-      case 0x9 => ???
-      case 0xA => ???
-      case 0xB => ???
-      case 0xC => ???
-      case 0xD => ???
+      case 0x9 => op9XY0
+      case 0xA => opANNN
+      case 0xB => opBNNN
+      case 0xC => opCXNN
+      case 0xD => opDXYN
       case 0xE => ???
       case 0xF => ???
     }
@@ -113,4 +113,30 @@ object OpcodeDecoder {
     cpu.copy(pc = cpu.pc + 1, registers = cpu.registers.updated(opcode.X, vX).updated(0xF, vF))
   }
   val op9XY0: OpInstruction = opcode => cpu => if (cpu.registers(opcode.X) != cpu.registers(opcode.Y)) cpu.copy(pc = cpu.pc + 2) else cpu.copy(pc = cpu.pc + 1)
+  val opANNN: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, i = opcode.NNN)
+  val opBNNN: OpInstruction = opcode => cpu => cpu.copy(pc = opcode.NNN + cpu.registers(0))
+  val opCXNN: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, registers = cpu.registers.updated(opcode.X, (Math.random() * 256).toInt & opcode.NN))
+  val opDXYN: OpInstruction = ???
+  val opEX9E: OpInstruction = ???
+  val opEXA1: OpInstruction = ???
+  /*
+   * FX07	Sets VX to the value of the delay timer.
+ * FX0A	A key press is awaited, and then stored in VX.
+ * FX15	Sets the delay timer to VX.
+ * FX18	Sets the sound timer to VX.
+ * FX1E	Adds VX to I.[3]
+ * FX29	Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.
+ * FX33	Stores the Binary-coded decimal representation of VX, with the most significant of three digits at the address in I, the middle digit at I plus 1, and the least significant digit at I plus 2. (In other words, take the decimal representation of VX, place the hundreds digit in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.)
+ * FX55	Stores V0 to VX in memory starting at address I.[4]
+ * FX65	Fills V0 to VX with values from memory starting at address I.
+ */
+  val opFX07: OpInstruction = ???
+  val opFX0A: OpInstruction = ???
+  val opFX15: OpInstruction = ???
+  val opFX18: OpInstruction = ???
+  val opFX1E: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, i = cpu.i + cpu.registers(opcode.X))
+  val opFX29: OpInstruction = ???
+  val opFX33: OpInstruction = ???
+  val opFX55: OpInstruction = ???
+  val opFX65: OpInstruction = ???
 }
