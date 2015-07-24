@@ -1,15 +1,6 @@
 package chip8
 
 /**
- * 00E0	Clears the screen.
- * 00EE	Returns from a subroutine.
- * 1NNN	Jumps to address NNN.
- * 2NNN	Calls subroutine at NNN.
- * 3XNN	Skips the next instruction if VX equals NN.
- * 4XNN	Skips the next instruction if VX doesn't equal NN.
- * 5XY0	Skips the next instruction if VX equals VY.
- * 6XNN	Sets VX to NN.
- * 7XNN	Adds NN to VX.
  * 8XY0	Sets VX to the value of VY.
  * 8XY1	Sets VX to VX or VY.
  * 8XY2	Sets VX to VX and VY.
@@ -73,14 +64,23 @@ object OpcodeDecoder {
     instruction(opcode)
   }
 
+  /* 00E0	Clears the screen. */
   val op00E0: OpInstruction = ???
+  /* 00EE	Returns from a subroutine. */
   val op00EE: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.stack.head, stack = cpu.stack.tail)
+  /* 1NNN	Jumps to address NNN. */
   val op1NNN: OpInstruction = opcode => cpu => cpu.copy(pc = opcode.NNN)
+  /* 2NNN	Calls subroutine at NNN. */
   val op2NNN: OpInstruction = opcode => cpu => cpu.copy(pc = opcode.NNN, stack = cpu.pc :: cpu.stack)
+  /* 3XNN	Skips the next instruction if VX equals NN. */
   val op3XNN: OpInstruction = opcode => cpu => if (cpu.registers(opcode.X) == opcode.NN) cpu.copy(pc = cpu.pc + 2) else cpu.copy(pc = cpu.pc + 1)
+  /* 4XNN	Skips the next instruction if VX doesn't equal NN. */
   val op4XNN: OpInstruction = opcode => cpu => if (cpu.registers(opcode.X) != opcode.NN) cpu.copy(pc = cpu.pc + 2) else cpu.copy(pc = cpu.pc + 1)
+  /* 5XY0	Skips the next instruction if VX equals VY. */
   val op5XY0: OpInstruction = opcode => cpu => if (cpu.registers(opcode.X) == cpu.registers(opcode.Y)) cpu.copy(pc = cpu.pc + 2) else cpu.copy(pc = cpu.pc + 1)
+  /* 6XNN	Sets VX to NN. */
   val op6XNN: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, registers = cpu.registers.updated(opcode.X, opcode.NN))
+  /* 7XNN	Adds NN to VX. */
   val op7XNN: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, registers = cpu.registers.updated(opcode.X, cpu.registers((opcode.X) + opcode.NN) & 0xFF))
   val op8XY0: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, registers = cpu.registers.updated(opcode.X, cpu.registers(opcode.Y)))
   val op8XY1: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 1, registers = cpu.registers.updated(opcode.X, cpu.registers(opcode.X) | cpu.registers(opcode.Y)))
