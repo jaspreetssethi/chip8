@@ -87,29 +87,29 @@ object OpcodeDecoder {
   val op8XY2: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, cpu.registers(opcode.X) & cpu.registers(opcode.Y)))
   val op8XY3: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, cpu.registers(opcode.X) ^ cpu.registers(opcode.Y)))
   val op8XY4: OpInstruction = opcode => cpu => {
-    val vF:Register = ((cpu.registers(opcode.X) + cpu.registers(opcode.Y)) & 0x100) >> 8
-    val vX:Register = (cpu.registers(opcode.X) + cpu.registers(opcode.Y)) & 0xFF
+    val vF: Register = ((cpu.registers(opcode.X) + cpu.registers(opcode.Y)) & 0x100) >> 8
+    val vX: Register = (cpu.registers(opcode.X) + cpu.registers(opcode.Y)) & 0xFF
     cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, vX).updated(0xF, vF))
   }
   val op8XY5: OpInstruction = opcode => cpu => {
-    val vF:Register = ((cpu.registers(opcode.X) - cpu.registers(opcode.Y)) & 0x100) >> 8
-    val vX:Register = (cpu.registers(opcode.X) - cpu.registers(opcode.Y)) & 0xFF
+    val vF: Register = ((cpu.registers(opcode.X) - cpu.registers(opcode.Y)) & 0x100) >> 8
+    val vX: Register = (cpu.registers(opcode.X) - cpu.registers(opcode.Y)) & 0xFF
     cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, vX).updated(0xF, vF))
   }
   //TODO: Check type of bit shift
   val op8XY6: OpInstruction = opcode => cpu => {
-    val vF:Register = cpu.registers(opcode.X) & 0x1
-    val vX:Register = cpu.registers(opcode.X) >> 1
+    val vF: Register = cpu.registers(opcode.X) & 0x1
+    val vX: Register = cpu.registers(opcode.X) >> 1
     cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, vX).updated(0xF, vF))
   }
   val op8XY7: OpInstruction = opcode => cpu => {
-    val vF:Register = ((cpu.registers(opcode.Y) - cpu.registers(opcode.X)) & 0x100) >> 8
-    val vX:Register = (cpu.registers(opcode.Y) - cpu.registers(opcode.X)) & 0xFF
+    val vF: Register = ((cpu.registers(opcode.Y) - cpu.registers(opcode.X)) & 0x100) >> 8
+    val vX: Register = (cpu.registers(opcode.Y) - cpu.registers(opcode.X)) & 0xFF
     cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, vX).updated(0xF, vF))
   }
   val op8XYE: OpInstruction = opcode => cpu => {
-    val vF:Register = (cpu.registers(opcode.X) & 0x80) >> 7
-    val vX:Register = cpu.registers(opcode.X) << 1
+    val vF: Register = (cpu.registers(opcode.X) & 0x80) >> 7
+    val vX: Register = cpu.registers(opcode.X) << 1
     cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, vX).updated(0xF, vF))
   }
   val op9XY0: OpInstruction = opcode => cpu => if (cpu.registers(opcode.X) != cpu.registers(opcode.Y)) cpu.copy(pc = cpu.pc + 4) else cpu.copy(pc = cpu.pc + 2)
@@ -137,6 +137,12 @@ object OpcodeDecoder {
   val opFX1E: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 2, i = cpu.i + cpu.registers(opcode.X))
   val opFX29: OpInstruction = ???
   val opFX33: OpInstruction = ???
-  val opFX55: OpInstruction = ???
-  val opFX65: OpInstruction = ???
+  val opFX55: OpInstruction = opcode => cpu => cpu.copy(
+    pc = cpu.pc + 2,
+    memory = (0 to opcode.X).foldLeft(cpu.memory)((memory, reg) => memory.updated(reg, cpu.registers(reg).toByte))
+  )
+  val opFX65: OpInstruction = opcode => cpu => cpu.copy(
+    pc = cpu.pc + 2,
+    registers = (0 to opcode.X).foldLeft(cpu.registers)((registers, reg) => registers.updated(reg, cpu.memory(cpu.i + reg)))
+  )
 }
