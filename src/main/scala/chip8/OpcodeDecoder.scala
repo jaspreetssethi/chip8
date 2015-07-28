@@ -57,8 +57,21 @@ object OpcodeDecoder {
       case 0xB => opBNNN
       case 0xC => opCXNN
       case 0xD => opDXYN
-      case 0xE => ???
-      case 0xF => ???
+      case 0xE => opcode.NN match {
+        case 0x9E => opEX9E
+        case 0xA1 => opEXA1
+      }
+      case 0xF => opcode.NN match {
+        case 0x07 => opFX07
+        case 0x0A => opFX0A
+        case 0x15 => opFX15
+        case 0x18 => opFX18
+        case 0x1E => opFX1E
+        case 0x29 => opFX29
+        case 0x33 => opFX33
+        case 0x55 => opFX55
+        case 0x65 => opFX65
+      }
     }
 
     instruction(opcode)

@@ -1,3 +1,6 @@
+import org.lwjgl.Sys
+
 object Main extends App {
-  print("Hello basic-project!")
+  println("Hello basic-project!")
+  println(s"LWJGL Version ${Sys.getVersion} is working.")
 }
