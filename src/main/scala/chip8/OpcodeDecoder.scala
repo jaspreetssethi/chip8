@@ -78,7 +78,7 @@ object OpcodeDecoder {
   }
 
   /* 00E0	Clears the screen. */
-  val op00E0: OpInstruction = ???
+  val op00E0: OpInstruction = _ =>
   /* 00EE	Returns from a subroutine. */
   val op00EE: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.stack.head, stack = cpu.stack.tail)
   /* 1NNN	Jumps to address NNN. */

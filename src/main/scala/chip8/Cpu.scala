@@ -4,10 +4,17 @@ package chip8
  * @author Jaspreet
  */
 case class Cpu(
-    val pc: Address,
-    val registers: RegisterFile,
-    val i: Register,
-    val stack: List[Address],
-    val memory: Vector[Byte]) {
+  pc: Address,
+  registers: RegisterFile,
+  i: Register,
+  stack: List[Address],
+  memory: Vector[Byte],
+  delayTimer: Int,
+  soundTimer: Int,
+  screen: Vector[Vector[Boolean]]) {
 
+  def readInstruction(): OpCode = memory(i) << 8 | memory(i + 1)
+  def renderScreen(): Unit = {
+
+  }
 }
