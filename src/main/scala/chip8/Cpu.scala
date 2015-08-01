@@ -14,7 +14,6 @@ case class Cpu(
   screen: Vector[Vector[Boolean]]) {
 
   def readInstruction(): OpCode = memory(i) << 8 | memory(i + 1)
-  def renderScreen(): Unit = {
-
-  }
+  def renderScreen(): Unit = ???
+  def exec():Cpu = {OpcodeDecoder.decode(readInstruction())(this)}
 }

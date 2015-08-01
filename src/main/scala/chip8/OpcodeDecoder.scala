@@ -78,7 +78,7 @@ object OpcodeDecoder {
   }
 
   /* 00E0	Clears the screen. */
-  val op00E0: OpInstruction = _ =>
+  val op00E0: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 2, screen = cpu.screen.init)
   /* 00EE	Returns from a subroutine. */
   val op00EE: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.stack.head, stack = cpu.stack.tail)
   /* 1NNN	Jumps to address NNN. */
@@ -130,8 +130,8 @@ object OpcodeDecoder {
   val opBNNN: OpInstruction = opcode => cpu => cpu.copy(pc = opcode.NNN + cpu.registers(0))
   val opCXNN: OpInstruction = opcode => cpu => cpu.copy(pc = cpu.pc + 2, registers = cpu.registers.updated(opcode.X, (Math.random() * 256).toInt & opcode.NN))
   val opDXYN: OpInstruction = ???
-  val opEX9E: OpInstruction = ???
-  val opEXA1: OpInstruction = ???
+  val opEX9E: OpInstruction = opcode => cpu => if(???) cpu.copy(pc = cpu.pc + 4) else cpu.copy(pc = cpu.pc + 2)
+  val opEXA1: OpInstruction = opcode => cpu => if(???) cpu.copy(pc = cpu.pc + 2) else cpu.copy(pc = cpu.pc + 4)
   /*
    * FX07	Sets VX to the value of the delay timer.
    * FX0A	A key press is awaited, and then stored in VX.
